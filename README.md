@@ -16,6 +16,12 @@ A raspberry pi smart clock project based on this screen (click image for link)
  - ???
  - Profit
 
+## Map
+ - `3dprint/` - 3D models for the stand and case
+ - `os` - A setup script for the OS SD card and other init code
+ - `webapp` - The app that runs the clock UI
+ - `readme` - Dependency files for readme's
+
 ### Features
 Tells the time
 Time app is hosted in a docker container
