@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="refresh" content="100" />
+  <meta charset="UTF-8">
+  <title>Clock</title>
+  <style>
+   @font-face{
+     font-family:'digital-7';
+     src: url('digital-7.ttf');
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "digital-7", sans-serif;
+        background-color: #000000;
+	overflow: hidden;
+    }
+    #clock {
+      margin-top: 30vh;
+      width: 100%;
+      color: #E0E0E0;
+      display: flex;
+      align-items: center;
+      font-size: 10vh;
+    }
+    #calendar {
+        float: left;
+        margin: 0 0 0 35vw;
+        background-color: #000000;
+        color: #E0E0E0;
+        display: block;
+        font-size: 40vh;
+    }
+    #seconds {
+        position: relative;
+        bottom: -0.50em;
+        left: 0.25em;
+        font-size: 50%;
+    }
+    #date {
+       font-size: 30%;
+    }
+  </style>
+	<script src="jquery-3.5.1.min.js"></script>
+</head>
+
+<body>
+  <div id="clock"></div>
+  <div id="calendar"></div>
+  <script>
+    function clock() {
+      let date = new Date();
+      let hrs = date.getHours();
+      let mins = date.getMinutes();
+      let secs = date.getSeconds();
+      let year = date.getFullYear();
+      let month = date.getMonth();
+      let day = date.getDay();
+
+      hrs = hrs < 10 ? `0${hrs}` : hrs;
+      mins = mins < 10 ? `0${mins}` : mins;
+      secs = secs < 10 ? `0${secs}` : secs;
+
+      let time = `${hrs}:${mins} <span id="seconds">${secs}</span>`;
+      document.getElementById("clock").innerHTML = time;
+    }
+
+    function calendar() {
+      let date = new Date();
+      let year = date.getFullYear();
+      let month = date.getMonth() + 1;
+      let day = date.getDate();
+
+      let time = `<span id="date">${year}-${month}-${day}</span>`;
+      document.getElementById("calendar").innerHTML = time;
+    }
+
+    var $burnGuard = $('<div>').attr('id','burnGuard').css({
+      'width':'1px',
+      'height':$(document).height()+'px',
+      'position':'absolute',
+      'top':'0px',
+      'left':'0px',
+      'display':'none'
+    }).appendTo('body');
+
+    var colors = ['#FF0000','#00FF00','#0000FF'], color = 0, delay = 5000, scrollDelay = 10000;
+    function burnGuardAnimate()
+    {
+      color = ++color % 3;
+      var rColor = colors[color];
+      $burnGuard.css({
+          'left':'0px',
+          'background-color':rColor,
+      }).show().animate({
+          'left':$(window).width()+'px'
+      },scrollDelay,function(){
+          $(this).hide();
+      });
+    }
+
+	  setTimeout(burnGuardAnimate, delay);
+    setInterval(calendar, 10000);
+    setInterval(clock, 500);
+    
+    clock();
+    calendar();
+    burnGuardAnimate();
+  </script>
+</body>
+
+</html>
