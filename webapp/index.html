@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <meta http-equiv="refresh" content="100" />
+  <meta http-equiv="refresh" content="1000" />
   <meta charset="UTF-8">
   <title>Clock</title>
   <style>
@@ -25,12 +25,11 @@
       color: #E0E0E0;
       display: flex;
       align-items: center;
-      font-size: 10vh;
+      font-size: 40vh;
     }
     #calendar {
         float: left;
         margin: 0 0 0 35vw;
-        background-color: #000000;
         color: #E0E0E0;
         display: block;
         font-size: 40vh;
@@ -88,13 +87,20 @@
       'display':'none'
     }).appendTo('body');
 
-    var colors = ['#FF0000','#00FF00','#0000FF'], color = 0, delay = 5000, scrollDelay = 10000;
+    var colors = ['#FF0000', '#000000', '#00FF00','#000000', '#0000FF','#000000']
+    var colors = ['#000000', '#000000', '#000000', '#000000', '#000000', '#000000']
+    var width = '2px'
+    var color = 0
+    var delay = 1000
+    var scrollDelay = 64000;
+
     function burnGuardAnimate()
     {
-      color = ++color % 3;
+      color = ++color % 6;
       var rColor = colors[color];
       $burnGuard.css({
           'left':'0px',
+          'width':width,
           'background-color':rColor,
       }).show().animate({
           'left':$(window).width()+'px'
@@ -103,10 +109,10 @@
       });
     }
 
-	  setTimeout(burnGuardAnimate, delay);
+    setInterval(burnGuardAnimate, delay + scrollDelay);
     setInterval(calendar, 10000);
     setInterval(clock, 500);
-    
+
     clock();
     calendar();
     burnGuardAnimate();
