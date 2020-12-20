@@ -32,7 +32,6 @@
     #r2 {
       width: 100vw;
       height: 33vh;
-      background-color: blueviolet;
     }
 
     #r3 {
@@ -260,8 +259,8 @@
     }
 
     setInterval(burnGuardAnimate, delay + scrollDelay);
-    setInterval(calendar, 10000);
-    setInterval(clock, 500);
+    setInterval(calendar, 10 * 1000); // 10sec
+    setInterval(clock, 0.5 * 1000); // 0.5sec
     setInterval(dim, 30 * 60 * 1000); // 30min
 
     clock();
