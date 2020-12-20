@@ -16,6 +16,14 @@
       color: #E0E0E0;
     }
 
+    #screen-dimmer {
+      background: rgba(0, 0, 0, 0);
+      height: 100vh;
+      width: 100vw;
+      position: fixed;
+      z-index: 999;
+    }
+
     #r1 {
       width: 100vw;
       height: 60vh;
@@ -55,7 +63,6 @@
     #date {
       position: relative;
       top: 20px;
-      color: #E0E0E0;
       font-size: 9vh;
     }
 
@@ -71,7 +78,6 @@
       position: relative;
       top: 20px;
       left: -15px;
-      color: #E0E0E0;
       font-size: 35vh;
     }
     
@@ -120,6 +126,7 @@
 </head>
 
 <body>
+  <div id="screen-dimmer"></div>
   <div id="r1">
     <div id="r1c1">
       <div id="r1c1r1"><div id="date"></div></div>
@@ -233,13 +240,34 @@
       });
     }
 
+    function dim() {
+      let dim = "";
+      let date = new Date();
+      let hour = date.getHours();
+      if (hour < 5) {
+        dim = "rgba(0, 0, 0, 0.6)";
+      } else if (hour < 15) {
+        dim = "rgba(0, 0, 0, 0.0)";
+      } else if (hour < 22) {
+        dim = "rgba(0, 0, 0, 0.2)";
+      } else if (hour < 24) {
+        dim = "rgba(0, 0, 0, 0.6)";
+      } else {
+        dim = "rgba(0, 0, 0, 0.6)";
+      }
+
+      document.getElementById("screen-dimmer").style.backgroundColor = dim;
+    }
+
     setInterval(burnGuardAnimate, delay + scrollDelay);
     setInterval(calendar, 10000);
     setInterval(clock, 500);
+    setInterval(dim, 30 * 60 * 1000); // 30min
 
     clock();
     calendar();
     burnGuardAnimate();
+    dim();
   </script>
 </body>
 
