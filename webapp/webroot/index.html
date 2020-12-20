@@ -6,50 +6,149 @@
   <meta charset="UTF-8">
   <title>Clock</title>
   <style>
-   @font-face{
-     font-family:'digital-7';
-     src: url('digital-7.ttf');
+    body {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Courier', monospace;
+      background-color: #000000;
+      overflow: hidden;
+      color: #E0E0E0;
     }
 
-    body {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "digital-7", sans-serif;
-        background-color: #000000;
-	overflow: hidden;
+    #r1 {
+      width: 100vw;
+      height: 60vh;
     }
-    #clock {
-      margin-top: 30vh;
+
+    #r2 {
+      width: 100vw;
+      height: 33vh;
+      background-color: blueviolet;
+    }
+
+    #r3 {
+      width: 100vw;
+      height: 7vh;
+    }
+
+    #r1c1 {
+      float: left;
+      width: 75%;
+      height: 100%;
+    }
+
+    #r1c2 {
+      float: right;
+      width: 25%;
+      height: 100%;
+    }
+
+    #r1c1r1 {
       width: 100%;
-      color: #E0E0E0;
+      height: 25%;
       display: flex;
+      justify-content: center;
       align-items: center;
-      font-size: 40vh;
     }
-    #calendar {
-        float: left;
-        margin: 0 0 0 35vw;
-        color: #E0E0E0;
-        display: block;
-        font-size: 40vh;
-    }
-    #seconds {
-        position: relative;
-        bottom: -0.50em;
-        left: 0.25em;
-        font-size: 50%;
-    }
+
     #date {
-       font-size: 30%;
+      position: relative;
+      top: 20px;
+      color: #E0E0E0;
+      font-size: 9vh;
+    }
+
+    #r1c1r2 {
+      width: 100%;
+      height: 75%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #time {
+      position: relative;
+      top: 20px;
+      left: -15px;
+      color: #E0E0E0;
+      font-size: 35vh;
+    }
+    
+    .subscript {
+      position: relative;
+      font-size: 50%;
+      left: 10px;
+    }
+
+    #r1c2r1 {
+      width: 100%;
+      height: 25%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #r1c2r2 {
+      width: 100%;
+      height: 75%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #quote {
+      font-size: 30px;
+      padding: 20px;
+    }
+
+    #next-schedule {
+      font-size: 40px;
+      padding: 20px;
+    }
+
+    #r2c1, #r2c2, #r2c3, #r2c4 {
+      float: left;
+      width: 25%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   </style>
 	<script src="jquery-3.5.1.min.js"></script>
 </head>
 
 <body>
-  <div id="clock"></div>
-  <div id="calendar"></div>
+  <div id="r1">
+    <div id="r1c1">
+      <div id="r1c1r1"><div id="date"></div></div>
+      <div id="r1c1r2"><div id="time"></div></div>
+    </div>
+    <div id="r1c2">
+      <div id="r1c2r1"><div id="quote">
+        The creative adult is the child who survived. </br> 
+        ~ Julian F. Fleron
+      </div></div>
+      <div id="r1c2r2"><div id="next-schedule">
+        +5h 13m / 17:33 </br>
+        Random Team Meeting </br>
+        </br>
+        +5h 13m / 17:33 </br>
+        Random Team Meeting
+      </div></div>
+    </div>
+  </div>
+  <div id="r2">
+    <div id="r2c1"></div>
+    <div id="r2c2"></div>
+    <div id="r2c3"></div>
+    <div id="r2c4"></div>
+  </div>
+  <div id="r3"></div>
+
+
+
   <script>
     function clock() {
       let date = new Date();
@@ -64,18 +163,43 @@
       mins = mins < 10 ? `0${mins}` : mins;
       secs = secs < 10 ? `0${secs}` : secs;
 
-      let time = `${hrs}:${mins} <span id="seconds">${secs}</span>`;
-      document.getElementById("clock").innerHTML = time;
+      let time = `${hrs}:${mins}<span class="subscript">${secs}</span>`;
+      document.getElementById("time").innerHTML = time;
     }
 
     function calendar() {
-      let date = new Date();
-      let year = date.getFullYear();
-      let month = date.getMonth() + 1;
-      let day = date.getDate();
+      var weekday = new Array(7);
+      weekday[0] = "Sun";
+      weekday[1] = "Mon";
+      weekday[2] = "Tue";
+      weekday[3] = "Wed";
+      weekday[4] = "Thur";
+      weekday[5] = "Fri";
+      weekday[6] = "Sat";
 
-      let time = `<span id="date">${year}-${month}-${day}</span>`;
-      document.getElementById("calendar").innerHTML = time;
+      var months = new Array(12);
+      months[ 0] = "Jan";
+      months[ 1] = "Feb";
+      months[ 2] = "Mar";
+      months[ 3] = "Apr";
+      months[ 4] = "May";
+      months[ 5] = "Jun";
+      months[ 6] = "Jul";
+      months[ 7] = "Aug";
+      months[ 8] = "Sept";
+      months[ 9] = "Oct";
+      months[10] = "Nov";
+      months[11] = "Dec";
+
+      let now = new Date();
+      let year = now.getFullYear();
+      let month = now.getMonth() + 1;
+      let month_t = months[now.getMonth()];
+      let date = now.getDate();
+      let day = weekday[now.getDay()]
+
+      let time = `${day} ${month_t}<span class="subscript">${month}</span> ${date} ${year}`;
+      document.getElementById("date").innerHTML = time;
     }
 
     var $burnGuard = $('<div>').attr('id','burnGuard').css({
