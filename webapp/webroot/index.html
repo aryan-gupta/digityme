@@ -17,7 +17,6 @@
     }
 
     #screen-dimmer {
-      background: rgba(0, 0, 0, 0);
       height: 100vh;
       width: 100vw;
       position: fixed;
@@ -209,8 +208,8 @@
     }
 
     var $burnGuard = $('<div>').attr('id','burnGuard').css({
-      'width':'1px',
-      'height':$(document).height()+'px',
+      'width':'100vw',
+      'height':'1px',
       'position':'absolute',
       'top':'0px',
       'left':'0px',
@@ -220,21 +219,21 @@
 
     var colors = ['#FF0000', '#000000', '#00FF00','#000000', '#0000FF','#000000']
     var colors = ['#000000', '#000000', '#000000', '#000000', '#000000', '#000000']
-    var width = '2px'
+    var thickness = '2px'
     var color = 0
     var delay = 1000
-    var scrollDelay = 64000;
+    var scrollDelay = 36000;
 
     function burnGuardAnimate()
     {
       color = ++color % 6;
       var rColor = colors[color];
       $burnGuard.css({
-          'left':'0px',
-          'width':width,
+          'top':'0px',
+          'height':thickness,
           'background-color':rColor,
       }).show().animate({
-          'left':$(window).width()+'px'
+          'top':$(window).width()+'px'
       },scrollDelay,function(){
           $(this).hide();
       });
