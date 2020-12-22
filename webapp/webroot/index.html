@@ -16,6 +16,16 @@
       color: #E0E0E0;
     }
 
+    canvas {
+      /* https://stackoverflow.com/questions/7615009/disable-interpolation-when-scaling-a-canvas */
+      image-rendering: optimizeSpeed;             /* Older versions of FF          */
+      image-rendering: -moz-crisp-edges;          /* FF 6.0+                       */
+      image-rendering: -webkit-optimize-contrast; /* Safari                        */
+      image-rendering: -o-crisp-edges;            /* OS X & Windows Opera (12.02+) */
+      image-rendering: pixelated;                 /* Awesome future-browsers       */
+      -ms-interpolation-mode: nearest-neighbor;   /* IE                            */
+    }
+
     #screen-dimmer {
       height: 100vh;
       width: 100vw;
@@ -25,6 +35,15 @@
       z-index: 5;
       background-color: black;
       opacity: 0;
+    }
+
+    #burnin-protect {
+      height: 100vh;
+      width: 100vw;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      z-index: 6;
     }
 
     #r1 {
@@ -156,6 +175,7 @@
   </div>
   <div id="r3"></div>
 
+  <canvas id="burnin-protect"></canvas>
 
 
   <script>
@@ -273,14 +293,55 @@
       setTimeout(dim, eta_ms);
     }
 
-    setInterval(burnGuardAnimate, delay + scrollDelay);
+    var dis = 4;
+    var x_stage = 1;
+    var y_stage = 1;
+
+    function update_canvas() {
+      // https://stackoverflow.com/questions/923885/capture-html-canvas-as-gif-jpg-png-pdf
+      x_stage = ++x_stage % dis;
+      if (x_stage == 0) {
+        y_stage = ++y_stage % dis;
+      }
+
+      var canvas = document.getElementById('burnin-protect');
+      canvas.width = document.body.clientWidth;
+      canvas.height = document.body.clientHeight;
+
+      var ctx = canvas.getContext('2d');
+      var canvasWidth = canvas.width;
+      var canvasHeight = canvas.height;
+      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+      var id = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
+      var pixels = id.data;
+
+
+      var x = x_stage;
+      while (x < canvasWidth) {
+        var y = y_stage;
+        while (y < canvasHeight) {
+          var off = (y * id.width + x) * 4;
+          
+          pixels[off] = 0;
+          pixels[off + 1] = 0;
+          pixels[off + 2] = 0;
+          pixels[off + 3] = 255;
+
+          y += dis;
+        }
+        x += dis;
+      }
+      ctx.putImageData(id, 0, 0);
+    }
+    
+    setInterval(update_canvas, 2 * 1000); // 2sec
     setInterval(calendar, 10 * 1000); // 10sec
     setInterval(clock, 0.5 * 1000); // 0.5sec
 
     clock();
     calendar();
-    burnGuardAnimate();
     dim();
+    update_canvas();
   </script>
 </body>
 
