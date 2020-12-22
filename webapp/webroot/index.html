@@ -11,7 +11,7 @@
       padding: 0;
       box-sizing: border-box;
       font-family: 'Courier', monospace;
-      background-color: #000000;
+      background-color: black;
       overflow: hidden;
       color: #E0E0E0;
     }
@@ -19,8 +19,12 @@
     #screen-dimmer {
       height: 100vh;
       width: 100vw;
-      position: fixed;
+      position: absolute;
+      top: 0px;
+      left: 0px;
       z-index: 5;
+      background-color: black;
+      opacity: 0;
     }
 
     #r1 {
@@ -240,28 +244,38 @@
     }
 
     function dim() {
-      let dim = "";
+      let op = "";
+      let opAnimTime = 10 * 1000; // 10sec
       let date = new Date();
       let hour = date.getHours();
+      var eta_ms = 30 * 60 * 1000;
+
       if (hour < 5) {
-        dim = "rgba(0, 0, 0, 0.6)";
+        op = "0.6";
+        eta_ms = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 5, 0).getTime() - Date.now();
       } else if (hour < 15) {
-        dim = "rgba(0, 0, 0, 0.0)";
+        op = "0.0";
+        eta_ms = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 15, 0).getTime() - Date.now();
       } else if (hour < 22) {
-        dim = "rgba(0, 0, 0, 0.2)";
+        op = "0.2";
+        eta_ms = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 22, 0).getTime() - Date.now();
       } else if (hour < 24) {
-        dim = "rgba(0, 0, 0, 0.6)";
+        op = "0.6";
+        eta_ms = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 24, 0).getTime() - Date.now();
       } else {
-        dim = "rgba(0, 0, 0, 0.6)";
+        op = "0.0";
       }
 
-      document.getElementById("screen-dimmer").style.backgroundColor = dim;
+      $("#screen-dimmer").animate({
+        'opacity':op
+      }, opAnimTime, function(){ })
+
+      setTimeout(dim, eta_ms);
     }
 
     setInterval(burnGuardAnimate, delay + scrollDelay);
     setInterval(calendar, 10 * 1000); // 10sec
     setInterval(clock, 0.5 * 1000); // 0.5sec
-    setInterval(dim, 30 * 60 * 1000); // 30min
 
     clock();
     calendar();
