@@ -27,6 +27,13 @@
       opacity: 0;
     }
 
+    .burn-guard {
+      width: 100vw;
+      position: absolute;
+      left: 0px;
+      z-index: 999999;
+    }
+
     #r1 {
       width: 100vw;
       height: 60vh;
@@ -129,6 +136,11 @@
 
 <body>
   <div id="screen-dimmer"></div>
+
+  <div class="burn-guard" id="bg1"></div>
+  <div class="burn-guard" id="bg2"></div>
+  <div class="burn-guard" id="bg3"></div>
+
   <div id="r1">
     <div id="r1c1">
       <div id="r1c1r1"><div id="date"></div></div>
@@ -211,35 +223,19 @@
       document.getElementById("date").innerHTML = time;
     }
 
-    var $burnGuard = $('<div>').attr('id','burnGuard').css({
-      'width':'100vw',
-      'height':'1px',
-      'position':'absolute',
-      'top':'0px',
-      'left':'0px',
-      'display':'none',
-      'z-index': '9999999'
-    }).appendTo('body');
-
-    var colors = ['#FF0000', '#000000', '#00FF00','#000000', '#0000FF','#000000']
-    var colors = ['#000000', '#000000', '#000000', '#000000', '#000000', '#000000']
-    var thickness = '2px'
-    var color = 0
-    var delay = 1000
     var scrollDelay = 36000;
 
-    function burnGuardAnimate()
-    {
-      color = ++color % 6;
-      var rColor = colors[color];
-      $burnGuard.css({
+    function burnGuardAnimate(num) {
+      $(`#bg${num}`).css({
           'top':'0px',
-          'height':thickness,
-          'background-color':rColor,
+          'height':'2px',
+          'background-color':'#000000',
       }).show().animate({
-          'top':$(window).width()+'px'
-      },scrollDelay,function(){
-          $(this).hide();
+        'top':$(window).height()+'px'
+      }, scrollDelay,'linear', function(){
+        $(this).hide();
+        burnGuardAnimate(num);
+        // setTimeout(function(){ burnGuardAnimate(num); }, 0);
       });
     }
 
@@ -273,14 +269,17 @@
       setTimeout(dim, eta_ms);
     }
 
-    setInterval(burnGuardAnimate, delay + scrollDelay);
     setInterval(calendar, 10 * 1000); // 10sec
     setInterval(clock, 0.5 * 1000); // 0.5sec
 
     clock();
     calendar();
-    burnGuardAnimate();
     dim();
+
+    var interval = scrollDelay / 3;
+    setTimeout(function(){ burnGuardAnimate(1); }, 0 * interval);
+    // setTimeout(function(){ burnGuardAnimate(2); }, 1 * interval);
+    // setTimeout(function(){ burnGuardAnimate(3); }, 2 * interval);
   </script>
 </body>
 
