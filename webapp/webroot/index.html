@@ -239,6 +239,12 @@
       });
     }
 
+    // return the number of millis until a certain hour + 1 min
+    function msTillHour(hour) {
+      let date = new Date();
+      return new Date(date.getFullYear(), date.getMonth(), date.getDate(), hour, 1).getTime() - Date.now();
+    }
+
     function dim() {
       let op = "";
       let opAnimTime = 10 * 1000; // 10sec
@@ -248,16 +254,16 @@
 
       if (hour < 5) {
         op = "0.6";
-        eta_ms = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 5, 0).getTime() - Date.now();
+        eta_ms = msTillHour(5);
       } else if (hour < 15) {
         op = "0.0";
-        eta_ms = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 15, 0).getTime() - Date.now();
+        eta_ms = msTillHour(15);
       } else if (hour < 22) {
         op = "0.2";
-        eta_ms = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 22, 0).getTime() - Date.now();
+        eta_ms = msTillHour(22);
       } else if (hour < 24) {
         op = "0.6";
-        eta_ms = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 24, 0).getTime() - Date.now();
+        eta_ms = msTillHour(24);
       } else {
         op = "0.0";
       }
