@@ -34,6 +34,12 @@
       z-index: 999999;
     }
 
+    .center {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
     #r1 {
       width: 100vw;
       height: 60vh;
@@ -64,9 +70,6 @@
     #r1c1r1 {
       width: 100%;
       height: 25%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
 
     #date {
@@ -78,9 +81,6 @@
     #r1c1r2 {
       width: 100%;
       height: 75%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
 
     #time {
@@ -99,17 +99,11 @@
     #r1c2r1 {
       width: 100%;
       height: 25%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
 
     #r1c2r2 {
       width: 100%;
       height: 75%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
 
     #quote {
@@ -126,9 +120,6 @@
       float: left;
       width: 25%;
       height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
   </style>
 	<script src="jquery-3.5.1.min.js"></script>
@@ -143,21 +134,12 @@
 
   <div id="r1">
     <div id="r1c1">
-      <div id="r1c1r1"><div id="date"></div></div>
-      <div id="r1c1r2"><div id="time"></div></div>
+      <div id="r1c1r1" class="center"><div id="date"></div></div>
+      <div id="r1c1r2" class="center"><div id="time"></div></div>
     </div>
     <div id="r1c2">
-      <div id="r1c2r1"><div id="quote">
-        The creative adult is the child who survived. </br> 
-        ~ Julian F. Fleron
-      </div></div>
-      <div id="r1c2r2"><div id="next-schedule">
-        +5h 13m / 17:33 </br>
-        Random Team Meeting </br>
-        </br>
-        +5h 13m / 17:33 </br>
-        Random Team Meeting
-      </div></div>
+      <div id="r1c2r1" class="center"><div id="quote"></div></div>
+      <div id="r1c2r2" class="center"><div id="next-schedule"></div></div>
     </div>
   </div>
   <div id="r2">
