@@ -223,8 +223,12 @@
 
     // return the number of millis until a certain hour + 1 min
     function msTillHour(hour) {
-      let date = new Date();
-      return new Date(date.getFullYear(), date.getMonth(), date.getDate(), hour, 1).getTime() - Date.now();
+      var now = new Date();
+      var ms = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, 0, 1, 0) - now;
+      if (ms < 0) {
+        ms += 86400000; // it's after 10am, try 10am tomorrow.
+      }
+      return ms;
     }
 
     function dim() {
@@ -234,20 +238,25 @@
       let hour = date.getHours();
       var eta_ms = 30 * 60 * 1000;
 
-      if (hour < 5) {
-        op = "0.6";
-        eta_ms = msTillHour(5);
-      } else if (hour < 15) {
-        op = "0.0";
-        eta_ms = msTillHour(15);
-      } else if (hour < 22) {
-        op = "0.2";
-        eta_ms = msTillHour(22);
-      } else if (hour < 24) {
-        op = "0.6";
-        eta_ms = msTillHour(24);
-      } else {
-        op = "0.0";
+      // hour -> change from
+      // 2 -> '0.2',
+      // 5 -> '0.6'
+      // means from hour 0 to hour 2, dim level
+      // will be 0.2 and from 2 to 5 dim level
+      // will be 0.6
+      dimChanges = {
+        5  : '0.8', // mid-night to 5am
+        15 : '0.0', // 5am to 3pm
+        22 : '0.2',
+        24 : '0.8'
+      };
+
+      for (var key in dimChanges) {
+        if (hour < key) {
+          op = dimChanges[key];
+          eta_ms = msTillHour(key);
+          break;
+        }
       }
 
       $("#screen-dimmer").animate({
