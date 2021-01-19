@@ -6,6 +6,11 @@
   <meta charset="UTF-8">
   <title>Clock</title>
   <style>
+    @font-face {
+      font-family: "weather";
+      src: url(weather.ttf);
+    }
+
     body {
       margin: 0;
       padding: 0;
@@ -121,6 +126,99 @@
       width: 25%;
       height: 100%;
     }
+
+    .weather-container {
+      font-size: 10px;
+      width: 100%;
+      height: 100%;
+    }
+
+    .weather-container .weather-top {
+      height: 80%;
+      width: 100%;
+    }
+
+    .weather-container .weather-top-left {
+      float: left;
+      height: 100%;
+      width: 50%;
+    }
+
+    .weather-container .weather-top-right {
+      float: right;
+      height: 100%;
+      width: 50%;
+    }
+
+    .weather-container .weather-top-left-top {
+      height: 80%;
+      width: 100%;
+    }
+
+    .weather-container .weather-top-left-bottom {
+      height: 20%;
+      width: 100%;
+    }
+
+    .weather-container .weather-top-right-top {
+      height: 40%;
+      width: 100%;
+    }
+
+    .weather-container .weather-top-right-bottom {
+      height: 40%;
+      width: 100%;
+    }
+
+    .weather-container .temp {
+      font-size: 120px;
+    }
+
+    .weather-container .weather-bottom {
+      height: 20%;
+      width: 100%;
+    }
+
+    .weather-container .description {
+      font-size: 55px;
+      height: 100%;
+      width: auto;
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .weather-today .icon {
+      font-size: 150px;
+      font-family: "weather";
+    }
+
+    /* https://stackoverflow.com/questions/45847392/pure-css-continuous-horizontal-text-scroll-without-break */
+    .marquee {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      position: absolute;
+    }
+
+    .marquee span {
+      width: 100%;
+      height: 100%;
+      display: inline-block;
+      position: relative;
+      left: -100%;
+      padding-left: 100%;
+      animation: marquee 15s linear infinite;
+      animation-delay: -7.5s;
+    }
+
+    .marquee2 span {
+      animation-delay: 0s;
+    }
+
+    @keyframes marquee {
+      0% { transform: translate(100%, 0); }
+      100% { transform: translate(-100%, 0); }
+    }
   </style>
 	<script src="jquery-3.5.1.min.js"></script>
 </head>
@@ -143,7 +241,23 @@
     </div>
   </div>
   <div id="r2">
-    <div id="r2c1"></div>
+    <div id="r2c1">
+      <div class="weather-container weather-today" id="weather-today">
+        <div class="weather-top">
+          <div class="weather-top-left">
+            <div class="weather-top-left-top center"><div class="icon"></div></div>
+            <div class="weather-top-left-bottom"><div class="precipitation"></div></div>
+          </div>
+          <div class="weather-top-right">
+            <div class="weather-top-right-top center"><div class="temp"></div></div>
+            <div class="weather-top-right-bottom"><div class="hi-lo"></div></div>
+          </div>
+        </div>
+        <div class="weather-bottom center">
+          <div class="description"></div>
+        </div> 
+      </div>
+    </div>
     <div id="r2c2"></div>
     <div id="r2c3"></div>
     <div id="r2c4"></div>
@@ -266,6 +380,88 @@
       setTimeout(dim, eta_ms);
     }
 
+    const key = '';
+
+    function weatherBallon( cityID ) {
+      fetch('https://api.openweathermap.org/data/2.5/weather?id=' + cityID+ '&appid=' + key)
+      .then(function(resp) { return resp.json() }) // Convert data to json
+      .then(function(data) {
+        console.log(data);
+        drawWeather(data);
+      })
+      .catch(function() {
+        // catch any errors
+      });
+    }
+
+    function drawWeather( d ) {
+      var celcius = Math.round(parseFloat(d.main.temp)-273.15);
+      var fahrenheit = Math.round(((parseFloat(d.main.temp)-273.15)*1.8)+32);
+      var description = d.weather[0].description; 
+      var weatherID = d.weather[0].id;
+      var sunrise = d.sys.sunrise * 1000;
+      var sunset  = d.sys.sunset * 1000;
+      var rain = "0";
+      
+      var weatherIcon = ""
+      var now = new Date().getTime();
+      if (weatherID == 800) {
+        if(now >= sunrise && now < sunset) {
+          weatherIcon = "&#xf00d;";
+        } else {
+          weatherIcon = "&#xf02e;";
+        }
+      } else {
+        switch((weatherID / 100) | 0) {
+          case 2 : weatherIcon = "&#xf01e;"; break;
+          case 3 : weatherIcon = "&#xf01c;"; break;
+          case 7 : weatherIcon = "&#xf014;"; break;
+          case 8 : weatherIcon = "&#xf013;"; break;
+          case 6 : weatherIcon = "&#xf01b;"; break;
+          case 5 : weatherIcon = "&#xf019;"; break;
+        }
+      }
+
+      if(d.hasOwnProperty('rain')){
+
+      }
+      
+      $(".weather-today .temp").html(fahrenheit + '&deg;');
+      $(".weather-today .icon").html(weatherIcon);
+      $(".weather-today .description").css({'width':'auto'}).html(description);
+      
+      var e = $('.weather-today .description');
+      if (e.width() > e.parent().width()) {
+        $(".weather-today .description").css({'width':'100%'}).html(`
+          <div class="marquee">
+            <span>${description}</span>
+          </div>
+          <div class="marquee marquee2">
+            <span>${description}</span>
+            </div>
+        `);
+      }
+
+      // var $c = $element.clone()
+      // .css({display: 'inline', width: 'auto', visibility: 'hidden'})
+      // .appendTo('body');
+      // var c_width = $c.width();
+      // if( c_width > $element.width() ) {
+      // }
+      // // $c.remove();
+
+
+      if( description.indexOf('rain') > 0 ) {
+        document.body.className = 'rainy';
+      } else if( description.indexOf('cloud') > 0 ) {
+        document.body.className = 'cloudy';
+      } else if( description.indexOf('sunny') > 0 ) {
+        document.body.className = 'sunny';
+      } else {
+        document.body.className = 'clear';
+      }
+    }
+
     setInterval(calendar, 10 * 1000); // 10sec
     setInterval(clock, 0.5 * 1000); // 0.5sec
 
@@ -277,6 +473,7 @@
     setTimeout(function(){ burnGuardAnimate(1); }, 0 * interval);
     // setTimeout(function(){ burnGuardAnimate(2); }, 1 * interval);
     // setTimeout(function(){ burnGuardAnimate(3); }, 2 * interval);
+    weatherBallon( 4497833 );
   </script>
 </body>
 
