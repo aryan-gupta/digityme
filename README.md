@@ -32,3 +32,6 @@ More features coming soon
  - The screen above
  - Solder/Iron (to solder the pins for the display)
  - 3D printer
+
+
+https://stackoverflow.com/questions/3080746/clicking-through-a-transparent-png

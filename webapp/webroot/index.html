@@ -382,6 +382,23 @@
 
     const key = '';
 
+    function getWeather(lon, lat) {
+      // https://api.openweathermap.org/data/2.5/onecall?lon=-80.7434&lat=34.9246&appid=4e5b6c083e9f334fc9531d14bd66687e
+      fetch(`https://api.openweathermap.org/data/2.5/onecall?lon=${lon}&lat=${lat}&appid=${key}`)
+      .then(function(resp) { return resp.json() }) // Convert data to json
+      .then(function(data) {
+        console.log(data);
+        drawWeather(data);
+      })
+      .catch(function() {
+        // catch any errors
+      });
+    }
+
+    function updateWeatherDisplay(json) {
+
+    }
+
     function weatherBallon( cityID ) {
       fetch('https://api.openweathermap.org/data/2.5/weather?id=' + cityID+ '&appid=' + key)
       .then(function(resp) { return resp.json() }) // Convert data to json
